@@ -1,7 +1,5 @@
-// app.module.ts
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { BooksModule } from './books/books.module';
 import { BooksModule } from './books/books.module';
 
 @Module({
