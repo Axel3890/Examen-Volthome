@@ -1,85 +1,177 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📚 Librería API - Examen Técnico Backend Jr (Node.js + NestJS + PostgreSQL)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto es una API RESTful desarrollada en **NestJS** que gestiona una librería. Incluye funcionalidades como:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- CRUD de libros conectados a una base de datos PostgreSQL.
+- Consulta de autores reales desde la API pública de Open Library.
+- Agrupamiento de libros por décadas, ordenados alfabéticamente por título.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🛠️ Tecnologías utilizadas
 
-## Project setup
+- [NestJS](https://nestjs.com/)
+- [Sequelize](https://sequelize.org/) + `sequelize-typescript`
+- [PostgreSQL](https://www.postgresql.org/)
+- [Axios](https://axios-http.com/) (para consumo de APIs externas)
+
+---
+
+## 🚀 Instalación y ejecución
+
+### 1. Clonar el repositorio
 
 ```bash
-$ npm install
+git clone https://github.com/Axel3890/Examen-Volthome.git
+cd examen-backend
 ```
 
-## Compile and run the project
+### 2. Instalar dependencias
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+### 3. Configurar la base de datos
+
+Asegurate de tener PostgreSQL corriendo y crear una base de datos llamada `books`.
+
+```ts
+Creá un archivo `.env` en la raíz del proyecto con la siguiente estructura:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_password
+DB_NAME=books
+```
+
+También podés usar el archivo `.env.example` como referencia:
+
+
+```env
+# .env.example
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_password
+DB_NAME=books
+```
+
+
+### 4. Ejecutar el proyecto
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run start:dev
 ```
 
-## Resources
+La API estará corriendo en: [http://localhost:3000](http://localhost:3000)
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 📚 Endpoints disponibles
 
-## Support
+### 📘️ Libros
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+| Método | Endpoint           | Descripción                           |
+|--------|--------------------|---------------------------------------|
+| GET    | `/books`           | Obtener todos los libros              |
+| GET    | `/books/:id`       | Obtener un libro por ID               |
+| POST   | `/books`           | Crear un nuevo libro                  |
+| PUT    | `/books/:id`       | Editar un libro                       |
+| DELETE | `/books/:id`       | Eliminar un libro                     |
+| GET    | `/books/grouped`   | Agrupar libros por década y ordenarlos por título |
 
-## Stay in touch
+> 📌 Ejemplo de cuerpo al crear/editar libros:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```json
+{
+  "title": "Cien años de soledad",
+  "author_id": "OL123456A",
+  "published_year": 1985
+}
+```
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 👤 Autores
+
+| Método | Endpoint             | Descripción                              |
+|--------|----------------------|------------------------------------------|
+| GET    | `/authors?search=x`  | Buscar autores reales por nombre         |
+
+> 📄 Ejemplo de respuesta:
+
+```json
+[
+  {
+    "id": "OL123456A",
+    "name": "Gabriel García Márquez",
+    "top_work": "Cien años de soledad",
+    "work_count": 50
+  }
+]
+```
+
+---
+
+## 🧐 Lógica de agrupamiento por década
+
+- Se utiliza el campo `published_year` para determinar la década (ej: 1993 → `1990s`).
+- Los libros de cada década se ordenan alfabéticamente por título.
+- No se utilizan librerías externas como `lodash`.
+
+> 📄 Ejemplo de respuesta para `/books/grouped`:
+
+```json
+{
+  "1980s": [
+    { "title": "Cien años de soledad", "published_year": 1985 }
+  ],
+  "1990s": [
+    { "title": "El nombre de la rosa", "published_year": 1990 },
+    { "title": "Rayuela", "published_year": 1993 }
+  ]
+}
+```
+
+---
+
+## 🧪 Estructura del proyecto
+
+```
+src/
+├── authors/
+│   ├── authors.controller.ts
+│   ├── authors.module.ts
+│   └── authors.service.ts
+├── books/
+│   ├── dto/
+│   │   ├── create-book.dto.ts
+│   │   └── update-book.dto.ts
+│   ├── book.model.ts
+│   ├── books.controller.ts
+│   ├── books.module.ts
+│   └── books.service.ts
+│
+│
+└── app.controller.ts
+└── app.module.ts
+└── app.service.ts
+└── main.ts
+```
+
+---
+
+## ✅ Funcionalidades implementadas
+
+- [x] CRUD de libros
+- [x] Conexión con PostgreSQL usando Sequelize
+- [x] Consumo de API externa (Open Library)
+- [x] Lógica de agrupamiento y ordenamiento sin librerías externas
+- [x] Separación por módulos (`books`, `authors`)
+- [x] Manejo de errores y validaciones mínimas
+- [x] Documentación en README
+
+---
