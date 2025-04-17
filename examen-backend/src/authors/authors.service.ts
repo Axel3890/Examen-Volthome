@@ -1,23 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
 export class AuthorsService {
   async searchAuthors(query: string): Promise<any[]> {
     try {
-      const response = await axios.get(
-        `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(query)}`,
-      );
+      const url = `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(query)}`;
+      const response = await axios.get(url);
+      const docs = response.data?.docs;
 
-      const authors = response.data?.docs.slice(0, 5).map((doc) => ({
+      if (!Array.isArray(docs)) {
+        throw new InternalServerErrorException('Respuesta inesperada de Open Library');
+      }
+
+      return docs.slice(0, 5).map((doc) => ({
         id: doc.key,
         name: doc.name,
-        top_work: doc.top_work,
-        work_count: doc.work_count,
+        top_work: doc.top_work ?? null,
+        work_count: doc.work_count ?? 0,
       }));
-      return authors;
     } catch (error) {
-      throw new Error('Error al consultar la API de Open Library');
+      console.error('Error al consultar Open Library:', error?.message || error);
+      throw new InternalServerErrorException('Error al consultar la API de Open Library');
     }
   }
 }
