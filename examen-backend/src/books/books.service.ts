@@ -36,4 +36,31 @@ export class BooksService {
     const book = await this.findOne(id);
     await book.destroy();
   }
-}
+
+  async findGrouped(): Promise<Record<string, Book[]>> {
+    const books = await this.findAll();
+  
+    const grouped = books.reduce((acc, book) => {
+      const decade = getDecade(book.published_year);
+      if (!acc[decade]) {
+        acc[decade] = [];
+      }
+      acc[decade].push(book);
+      return acc;
+    }, {} as Record<string, Book[]>);
+  
+    Object.keys(grouped).forEach((decade) => {
+      grouped[decade].sort((a, b) =>
+        a.title.toLowerCase().localeCompare(b.title.toLowerCase()),
+      );
+    });
+  
+    return grouped;
+  }
+ } 
+
+  function getDecade(year: number): string {
+    const decadeStart = Math.floor(year / 10) * 10;
+    return `${decadeStart}s`;
+  }
+  

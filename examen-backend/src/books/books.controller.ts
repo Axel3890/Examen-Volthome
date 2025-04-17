@@ -31,4 +31,9 @@ export class BooksController {
   async remove(@Param('id') id: string): Promise<void> {
     return this.booksService.remove(+id);
   }
+
+  @Get('grouped')
+  async getGroupedBooks(): Promise<Record<string, Book[]>> {
+    return this.booksService.findGrouped();
+  }
 }
