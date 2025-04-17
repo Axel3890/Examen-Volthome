@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, ServiceUnavailableException } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
@@ -6,7 +6,10 @@ export class AuthorsService {
   async searchAuthors(query: string): Promise<any[]> {
     try {
       const url = `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(query)}`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        timeout: 5000,
+      });
+
       const docs = response.data?.docs;
 
       if (!Array.isArray(docs)) {
@@ -19,9 +22,22 @@ export class AuthorsService {
         top_work: doc.top_work ?? null,
         work_count: doc.work_count ?? 0,
       }));
+
     } catch (error) {
-      console.error('Error al consultar Open Library:', error?.message || error);
-      throw new InternalServerErrorException('Error al consultar la API de Open Library');
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const msg = error.response?.data?.error || error.message;
+
+        if (status === 404) {
+          throw new InternalServerErrorException('No se encontraron resultados');
+        }
+
+        console.error('Error al consultar Open Library:', msg);
+        throw new ServiceUnavailableException('No se pudo contactar con Open Library');
+      }
+
+      console.error('Error interno al buscar autores:', error);
+      throw new InternalServerErrorException('Error interno al procesar la solicitud');
     }
   }
 }
