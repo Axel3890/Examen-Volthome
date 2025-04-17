@@ -7,9 +7,10 @@ export class AuthorsController {
 
   @Get()
   async search(@Query('search') search: string) {
-    if (!search) {
-      throw new BadRequestException('El parámetro search es requerido');
+    if (!search || typeof search !== 'string' || search.trim() === '') {
+      throw new BadRequestException('El parámetro "search" es requerido y no puede estar vacío');
     }
-    return this.authorsService.searchAuthors(search);
+
+    return this.authorsService.searchAuthors(search.trim());
   }
 }
