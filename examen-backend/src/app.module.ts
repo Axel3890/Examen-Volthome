@@ -6,9 +6,12 @@ import { AuthorsModule } from './authors/authors.module';
 
 @Module({
   imports: [
+    // Configura variables de entorno y las hace accesibles globalmente
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
+    // Configura Sequelize de forma asíncrona usando variables de entorno
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -19,10 +22,12 @@ import { AuthorsModule } from './authors/authors.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        autoLoadModels: true,
-        synchronize: true,
+        autoLoadModels: true, // Carga automática de modelos registrados
+        synchronize: true,    // Sincroniza el schema (solo para desarrollo)
       }),
     }),
+
+    // Importa los módulos de libros y autores
     BooksModule,
     AuthorsModule,
   ],
