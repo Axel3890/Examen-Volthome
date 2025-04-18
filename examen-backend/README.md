@@ -93,6 +93,9 @@ La API estará corriendo en: [http://localhost:3000](http://localhost:3000)
 }
 ```
 
+📌 Nota: El campo author_id se refiere a un autor externo de la Open Library. No se valida contra la API en tiempo real al crear el libro, pero se recomienda elegir IDs válidos desde el buscador incluido en la app.
+
+
 ---
 
 ### 👤 Autores
