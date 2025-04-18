@@ -12,19 +12,21 @@ import { PlusCircle } from "lucide-react"
 import { GroupedDecadeSection } from "./components/group-decade-section"
 import type { Book } from "./types"
 
-
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([])
   const [isAddingBook, setIsAddingBook] = useState(false)
   const [editingBook, setEditingBook] = useState<Book | null>(null)
-
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const fetchBooks = async () => {
     try {
       const res = await axios.get(`http://localhost:3000/books`)
       setBooks(res.data)
-    } catch (err) {
+      setErrorMessage(null)
+    } catch (err: any) {
       console.error("Error al obtener libros:", err)
+      const msg = err.response?.data?.message
+      setErrorMessage(Array.isArray(msg) ? msg.join("; ") : msg || "Error al obtener libros")
     }
   }
 
@@ -40,9 +42,12 @@ export default function Home() {
         author_id: newBook.author_id,
       })
       setIsAddingBook(false)
+      setErrorMessage(null)
       fetchBooks()
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error al agregar libro:", err)
+      const msg = err.response?.data?.message
+      setErrorMessage(Array.isArray(msg) ? msg.join("; ") : msg || "Error al agregar libro")
     }
   }
 
@@ -54,18 +59,24 @@ export default function Home() {
         author_id: updatedBook.author_id,
       })
       setEditingBook(null)
+      setErrorMessage(null)
       fetchBooks()
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error al editar libro:", err)
+      const msg = err.response?.data?.message
+      setErrorMessage(Array.isArray(msg) ? msg.join("; ") : msg || "Error al editar libro")
     }
   }
 
   const handleDeleteBook = async (id: number) => {
     try {
       await axios.delete(`http://localhost:3000/books/${id}`)
+      setErrorMessage(null)
       fetchBooks()
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error al eliminar libro:", err)
+      const msg = err.response?.data?.message
+      setErrorMessage(Array.isArray(msg) ? msg.join("; ") : msg || "Error al eliminar libro")
     }
   }
 
@@ -76,6 +87,12 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-slate-800 mb-2">Examen Volthome</h1>
           <p className="text-slate-600">Sistema para una libreria.</p>
         </header>
+
+        {errorMessage && (
+          <div className="mb-6 p-4 bg-red-100 text-red-800 border border-red-300 rounded">
+            {errorMessage}
+          </div>
+        )}
 
         <Tabs defaultValue="books" className="w-full">
           <TabsList className="mb-6">
@@ -95,27 +112,27 @@ export default function Home() {
 
             {isAddingBook && (
               <BookForm
-  onSubmit={handleAddBook}
-  onCancel={() => setIsAddingBook(false)}
-/>
+                onSubmit={handleAddBook}
+                onCancel={() => setIsAddingBook(false)}
+              />
             )}
 
             {editingBook && (
               <BookForm
-  book={editingBook}
-  onSubmit={handleEditBook}
-  onCancel={() => setEditingBook(null)}
-/>
+                book={editingBook}
+                onSubmit={handleEditBook}
+                onCancel={() => setEditingBook(null)}
+              />
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {books.map((book) => (
                 <BookCard
-  key={book.id!}
-  book={book}
-  onEdit={() => setEditingBook(book)}
-  onDelete={() => handleDeleteBook(book.id!)}
-/>
+                  key={book.id!}
+                  book={book}
+                  onEdit={() => setEditingBook(book)}
+                  onDelete={() => handleDeleteBook(book.id!)}
+                />
               ))}
             </div>
           </TabsContent>
