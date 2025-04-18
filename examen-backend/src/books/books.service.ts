@@ -16,10 +16,12 @@ export class BooksService {
     private bookModel: typeof Book,
   ) {}
 
+  // Devuelve todos los libros almacenados
   async findAll(): Promise<Book[]> {
     return this.bookModel.findAll();
   }
 
+  // Busca un libro por ID, lanza 404 si no lo encuentra
   async findOne(id: number): Promise<Book> {
     const book = await this.bookModel.findByPk(id);
     if (!book) {
@@ -28,6 +30,7 @@ export class BooksService {
     return book;
   }
 
+  // Crea un nuevo libro y maneja errores de validación
   async create(createBookDto: CreateBookDto): Promise<Book> {
     try {
       return await this.bookModel.create(createBookDto);
@@ -44,6 +47,7 @@ export class BooksService {
     }
   }
 
+  // Actualiza un libro existente y maneja errores de validación
   async update(
     id: number,
     updateBookDto: UpdateBookDto,
@@ -64,11 +68,13 @@ export class BooksService {
     }
   }
 
+  // Elimina un libro si existe
   async remove(id: number): Promise<void> {
     const book = await this.findOne(id);
     await book.destroy();
   }
 
+  // Agrupa los libros por década según su año de publicación
   async findGrouped(): Promise<Record<string, Book[]>> {
     const books = await this.findAll();
     const grouped = books.reduce((acc, book) => {
@@ -78,6 +84,7 @@ export class BooksService {
       return acc;
     }, {} as Record<string, Book[]>);
 
+    // Ordena alfabéticamente los libros dentro de cada grupo
     Object.keys(grouped).forEach((decade) => {
       grouped[decade].sort((a, b) =>
         a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }),
@@ -88,8 +95,8 @@ export class BooksService {
   }
 }
 
+// Devuelve la década a la que pertenece un año (ej: 1990s, 2000s)
 function getDecade(year: number): string {
   const decadeStart = Math.floor(year / 10) * 10;
   return `${decadeStart}s`;
 }
-  

@@ -8,7 +8,7 @@ export class CreateBookDto {
 
   @IsString()
   @IsNotEmpty()
-  author: string;
+  author_id: string;
 
   @Type(() => Number)
   @IsInt()

@@ -5,17 +5,18 @@ import axios from 'axios';
 export class AuthorsService {
   async searchAuthors(query: string): Promise<any[]> {
     try {
+      // Consulta a la API de Open Library con el término de búsqueda
       const url = `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(query)}`;
-      const response = await axios.get(url, {
-        timeout: 5000,
-      });
+      const response = await axios.get(url);
 
       const docs = response.data?.docs;
 
+      // Validación de estructura esperada
       if (!Array.isArray(docs)) {
         throw new InternalServerErrorException('Respuesta inesperada de Open Library');
       }
 
+      // Transformamos y devolvemos los primeros 5 resultados
       return docs.slice(0, 5).map((doc) => ({
         id: doc.key,
         name: doc.name,
@@ -24,6 +25,7 @@ export class AuthorsService {
       }));
 
     } catch (error) {
+      // Manejo de errores específicos de Axios
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
         const msg = error.response?.data?.error || error.message;
@@ -36,6 +38,7 @@ export class AuthorsService {
         throw new ServiceUnavailableException('No se pudo contactar con Open Library');
       }
 
+      // Manejo de otros errores no relacionados con Axios
       console.error('Error interno al buscar autores:', error);
       throw new InternalServerErrorException('Error interno al procesar la solicitud');
     }
